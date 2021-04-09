@@ -10,24 +10,16 @@ const getFromLocalStorage = () => {
   }
 };
 
-const fetchData = (cityName) => {
-  const functionForJSON = (responseObject) => {
-    return responseObject.json();
-  };
-  const functionForApplication = (dataFromServer) => {
-    console.log(dataFromServer);
-  };
-  const functionToHandleError = (errorObject) => {
-    // TODO
-    console.log(errorObject);
-  };
+const fetchData = async (url) => {
+  try {
+    const response = await fetch(url);
 
-  const url = `http://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${API_KEY}`;
+    const data = await response.json();
 
-  fetch(url)
-    .then(functionForJSON)
-    .then(functionForApplication)
-    .catch(functionToHandleError);
+    return data;
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 const getDataByCityName = (event) => {
@@ -38,7 +30,7 @@ const getDataByCityName = (event) => {
   }
 };
 
-const onSubmit = (event) => {
+const onSubmit = async (event) => {
   event.preventDefault();
 
   const cityName = $("#city-input").val();
@@ -52,7 +44,11 @@ const onSubmit = (event) => {
 
   $("#city-input").val("");
 
-  fetchData(cityName);
+  const url = `http://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${API_KEY}`;
+
+  const data = await fetchData(url);
+
+  console.log(data);
 };
 
 const renderCitiesFromLocalStorage = () => {
