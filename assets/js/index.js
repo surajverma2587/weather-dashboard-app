@@ -1,3 +1,5 @@
+const API_KEY = "60b4fb66103f9e3c6f93920a7d7f1377";
+
 const getFromLocalStorage = () => {
   const localStorageData = JSON.parse(localStorage.getItem("cities"));
 
@@ -8,11 +10,31 @@ const getFromLocalStorage = () => {
   }
 };
 
+const fetchData = (cityName) => {
+  const functionForJSON = (responseObject) => {
+    return responseObject.json();
+  };
+  const functionForApplication = (dataFromServer) => {
+    console.log(dataFromServer);
+  };
+  const functionToHandleError = (errorObject) => {
+    // TODO
+    console.log(errorObject);
+  };
+
+  const url = `http://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${API_KEY}`;
+
+  fetch(url)
+    .then(functionForJSON)
+    .then(functionForApplication)
+    .catch(functionToHandleError);
+};
+
 const getDataByCityName = (event) => {
   const target = $(event.target);
   if (target.is("li")) {
     const cityName = target.data("city");
-    console.log(cityName);
+    fetchData(cityName);
   }
 };
 
@@ -29,6 +51,8 @@ const onSubmit = (event) => {
   renderCitiesFromLocalStorage();
 
   $("#city-input").val("");
+
+  fetchData(cityName);
 };
 
 const renderCitiesFromLocalStorage = () => {
@@ -59,4 +83,5 @@ const onReady = () => {
 };
 
 $("#search-by-city-form").on("submit", onSubmit);
+
 $(document).ready(onReady);
