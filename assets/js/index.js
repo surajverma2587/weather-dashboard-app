@@ -27,12 +27,25 @@ const getDataByCityName = async (event) => {
   if (target.is("li")) {
     const cityName = target.data("city");
 
-    const url = `http://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${API_KEY}`;
+    const url = `http://api.openweathermap.org/data/2.5/weather?q=${cityName}&units=imperial&appid=${API_KEY}`;
 
     const data = await fetchData(url);
 
-    console.log(data);
+    const currentDayData = transformData(data);
+
+    renderCurrentDayCard(currentDayData);
   }
+};
+
+const transformData = (data) => {
+  return {
+    cityName: data.name,
+    temperature: data.main.temp,
+    humidity: data.main.humidity,
+    windSpeed: data.wind.speed,
+    date: moment.unix(data.dt).format("MM/DD/YYYY"),
+    iconURL: `http://openweathermap.org/img/wn/${data.weather[0].icon}@2x.png`,
+  };
 };
 
 const onSubmit = async (event) => {
@@ -49,11 +62,13 @@ const onSubmit = async (event) => {
 
   $("#city-input").val("");
 
-  const url = `http://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=${API_KEY}`;
+  const url = `http://api.openweathermap.org/data/2.5/weather?q=${cityName}&units=imperial&appid=${API_KEY}`;
 
   const data = await fetchData(url);
 
-  console.log(data);
+  const currentDayData = transformData(data);
+
+  renderCurrentDayCard(currentDayData);
 };
 
 const renderCitiesFromLocalStorage = () => {
@@ -77,6 +92,24 @@ const renderCitiesFromLocalStorage = () => {
   ul.on("click", getDataByCityName);
 
   $("#searched-cities").append(ul);
+};
+
+const renderCurrentDayCard = (data) => {
+  $("#current-day").empty();
+
+  const card = `<div class="card my-2">
+    <div class="card-body">
+      <h2>
+        ${data.cityName} (${data.date}) <img src="${data.iconURL}" />
+      </h2>
+      <div class="py-2">Temperature: ${data.temperature}&deg; F</div>
+      <div class="py-2">Humidity: ${data.humidity}%</div>
+      <div class="py-2">Wind Speed: ${data.windSpeed} MPH</div>
+      <div class="py-2">UV Index:</div>
+    </div>
+  </div>`;
+
+  $("#current-day").append(card);
 };
 
 const onReady = () => {
