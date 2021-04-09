@@ -116,6 +116,17 @@ const renderCitiesFromLocalStorage = () => {
   $("#searched-cities").append(ul);
 };
 
+// FIX this function with the right class names and threshold values and then use in renderCurrentDayCard()
+const getUvIndexClass = (uvIndex) => {
+  if (uvIndex > 2) {
+    return "p-2 bg-primary text-white";
+  } else if (uvIndex < 2) {
+    return "p-2 bg-danger text-white";
+  } else {
+    return "";
+  }
+};
+
 const renderCurrentDayCard = (data) => {
   $("#current-day").empty();
 
@@ -127,7 +138,7 @@ const renderCurrentDayCard = (data) => {
       <div class="py-2">Temperature: ${data.temperature}&deg; F</div>
       <div class="py-2">Humidity: ${data.humidity}%</div>
       <div class="py-2">Wind Speed: ${data.windSpeed} MPH</div>
-      <div class="py-2">UV Index: ${data.uvi}</div>
+      <div class="py-2">UV Index: <span class="">${data.uvi}</span></div>
     </div>
   </div>`;
 
