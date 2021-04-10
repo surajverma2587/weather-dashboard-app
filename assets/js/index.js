@@ -71,11 +71,11 @@ const onSubmit = async (event) => {
 };
 
 const renderAllCards = async (cityName) => {
-  const currentDayUrl = `http://api.openweathermap.org/data/2.5/weather?q=${cityName}&units=imperial&appid=${API_KEY}`;
+  const currentDayUrl = `http://api.openweathermap.org/data/2.5/weather?q=${cityName}&units=metric&appid=${API_KEY}`;
 
   const currentDayResponse = await fetchData(currentDayUrl);
 
-  const forecastUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${currentDayResponse.coord.lat}&lon=${currentDayResponse.coord.lon}&exclude=minutely,hourly&appid=${API_KEY}`;
+  const forecastUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${currentDayResponse.coord.lat}&lon=${currentDayResponse.coord.lon}&exclude=minutely,hourly&units=metric&appid=${API_KEY}`;
 
   const forecastResponse = await fetchData(forecastUrl);
 
@@ -135,7 +135,7 @@ const renderCurrentDayCard = (data) => {
       <h2>
         ${data.cityName} (${data.date}) <img src="${data.iconURL}" />
       </h2>
-      <div class="py-2">Temperature: ${data.temperature}&deg; F</div>
+      <div class="py-2">Temperature: ${data.temperature}&deg; C</div>
       <div class="py-2">Humidity: ${data.humidity}%</div>
       <div class="py-2">Wind Speed: ${data.windSpeed} MPH</div>
       <div class="py-2">UV Index: <span class="">${data.uvi}</span></div>
@@ -150,7 +150,7 @@ const renderForecastCard = (data) => {
     <h5 class="card-title p-1">${data.date}</h5>
     <img src="${data.iconURL}" />
     <h6 class="card-subtitle mb-2 text-light p-md-2">
-      Temperature: ${data.temperature}&deg; F
+      Temperature: ${data.temperature}&deg; C
     </h6>
     <h6 class="card-subtitle mb-2 text-light p-md-2">
       Humidity: ${data.humidity}%
